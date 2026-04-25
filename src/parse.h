@@ -20,6 +20,7 @@ typedef struct {
     char *target;
     char **dep;
     char **recipe;
+    int nb_recipe;
 } rule;
 
 typedef struct {
@@ -31,5 +32,8 @@ typedef struct {
 } makefile_data;
 
 makefile_data parse_makefile(const char *filename);
+char **cutter(char *str, char sep);
+line_type get_line_type(char *line);
+int len(char **tab);
 
 #endif
