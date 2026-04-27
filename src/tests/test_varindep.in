@@ -1,0 +1,7 @@
+DEP = dep1
+
+all: ${DEP}
+	echo all done
+
+dep1:
+	echo dep1 done

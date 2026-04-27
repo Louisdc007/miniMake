@@ -1,0 +1,212 @@
+tests:
+
+  # =========================================================================
+  # CATÉGORIE : Flags de la ligne de commande
+  # =========================================================================
+
+  - name: "-h seul → aide + exit 0"
+    category: "Flags CLI"
+    args: ["-h"]
+    exit_code: 0
+    check_stdout: false
+
+  - name: "-h prioritaire sur -p"
+    category: "Flags CLI"
+    args: ["-h", "-p"]
+    exit_code: 0
+    check_stdout: false
+
+  - name: "-h prioritaire sur -f inexistant"
+    category: "Flags CLI"
+    args: ["-h", "-f", "nonexistent_file.in"]
+    exit_code: 0
+    check_stdout: false
+
+  - name: "-h prioritaire même en dernier"
+    category: "Flags CLI"
+    args: ["-f", "nonexistent_file.in", "-p", "-h"]
+    exit_code: 0
+    check_stdout: false
+
+  - name: "-f -h → ouvre le fichier nommé -h (pas l'aide)"
+    category: "Flags CLI"
+    args: ["-f", "-h"]
+    exit_code: 3
+    check_stdout: false
+
+  - name: "-f sans argument → exit 2"
+    category: "Flags CLI"
+    args: ["-f"]
+    exit_code: 2
+    check_stdout: false
+
+  - name: "-f fichier inexistant → exit 3"
+    category: "Flags CLI"
+    args: ["-f", "nonexistent_file.in"]
+    exit_code: 3
+    check_stdout: false
+
+  - name: "sans argument + pas de Makefile → exit 3"
+    category: "Flags CLI"
+    args: []
+    exit_code: 3
+    check_stdout: false
+
+  # =========================================================================
+  # CATÉGORIE : Mode -p (affichage des données parsées)
+  # =========================================================================
+
+  - name: "-p basique (variable + règle simple)"
+    category: "Mode -p"
+    args: ["-f", "Minimakefile.in", "-p"]
+    exit_code: 0
+    output_file: "Minimakefile.out_p"
+
+  - name: "-p deux variables + recettes NON étendues"
+    category: "Mode -p"
+    args: ["-f", "test_multivar.in", "-p"]
+    exit_code: 0
+    output_file: "test_multivar.out_p"
+
+  - name: "-p plusieurs recettes NON étendues"
+    category: "Mode -p"
+    args: ["-f", "test_varinrecipe.in", "-p"]
+    exit_code: 0
+    output_file: "test_varinrecipe.out_p"
+
+  - name: "-p dépendances affichées en [dep]"
+    category: "Mode -p"
+    args: ["-f", "test_chain.in", "-p"]
+    exit_code: 0
+    output_file: "test_chain.out_p"
+
+  # =========================================================================
+  # CATÉGORIE : Exécution basique
+  # =========================================================================
+
+  - name: "exécution basique (variable CC, echo Toto)"
+    category: "Exécution basique"
+    args: ["-f", "Minimakefile.in"]
+    exit_code: 0
+    output_file: "Minimakefile.out_e"
+
+  - name: "substitution de deux variables dans la recette"
+    category: "Exécution basique"
+    args: ["-f", "test_multivar.in"]
+    exit_code: 0
+    output_file: "test_multivar.out_e"
+
+  - name: "substitution de variables dans plusieurs lignes de recette"
+    category: "Exécution basique"
+    args: ["-f", "test_varinrecipe.in"]
+    exit_code: 0
+    output_file: "test_varinrecipe.out_e"
+
+  - name: "plusieurs recettes exécutées dans l'ordre"
+    category: "Exécution basique"
+    args: ["-f", "test_multirecipe.in"]
+    exit_code: 0
+    output_file: "test_multirecipe.out_e"
+
+  - name: "strip des commentaires (# pleine ligne et inline)"
+    category: "Exécution basique"
+    args: ["-f", "test_comment.in"]
+    exit_code: 0
+    output_file: "test_comment.out_e"
+
+  - name: "règle sans recette → exit 0 silencieux"
+    category: "Exécution basique"
+    args: ["-f", "test_norule.in"]
+    exit_code: 0
+    check_stdout: false
+
+  # =========================================================================
+  # CATÉGORIE : Sélection de cible
+  # =========================================================================
+
+  - name: "cible par défaut (première règle)"
+    category: "Sélection de cible"
+    args: ["-f", "test_targets.in"]
+    exit_code: 0
+    output_file: "test_targets_all.out_e"
+
+  - name: "cible explicite 'clean'"
+    category: "Sélection de cible"
+    args: ["-f", "test_targets.in", "clean"]
+    exit_code: 0
+    output_file: "test_targets_clean.out_e"
+
+  - name: "deux cibles en argument → exécutées dans l'ordre"
+    category: "Sélection de cible"
+    args: ["-f", "test_targets.in", "all", "clean"]
+    exit_code: 0
+    output_file: "test_two_targets.out_e"
+
+  # =========================================================================
+  # CATÉGORIE : Dépendances et récursion
+  # =========================================================================
+
+  - name: "chaîne de dépendance A→B (2 niveaux)"
+    category: "Dépendances"
+    args: ["-f", "test_chain.in"]
+    exit_code: 0
+    output_file: "test_chain.out_e"
+
+  - name: "chaîne de dépendance A→B→C (3 niveaux)"
+    category: "Dépendances"
+    args: ["-f", "test_chain3.in"]
+    exit_code: 0
+    output_file: "test_chain3.out_e"
+
+  - name: "variable utilisée comme nom de dépendance (${DEP})"
+    category: "Dépendances"
+    args: ["-f", "test_varindep.in"]
+    exit_code: 0
+    output_file: "test_varindep.out_e"
+
+  - name: "dépendance introuvable → exit 2 + message 'No rule'"
+    category: "Dépendances"
+    args: ["-f", "test_missingdep.in"]
+    exit_code: 2
+    check_stdout: false
+
+  # =========================================================================
+  # CATÉGORIE : Détection de cible à jour
+  # =========================================================================
+
+  - name: "cible à jour : fichier existe, aucune dépendance"
+    category: "Up-to-date"
+    args: ["-f", "test_uptodate.in"]
+    exit_code: 0
+    output_file: "test_uptodate.out_e"
+    setup:    ["touch mytarget"]
+    teardown: ["rm -f mytarget"]
+
+  - name: "cible absente → recette exécutée"
+    category: "Up-to-date"
+    args: ["-f", "test_uptodate.in"]
+    exit_code: 0
+    output_file: "test_uptodate_rebuild.out_e"
+    teardown: ["rm -f mytarget"]
+
+  # =========================================================================
+  # CATÉGORIE : Gestion des erreurs de recette
+  # =========================================================================
+
+  - name: "recette qui échoue → exit 2 + message [target] Error N"
+    category: "Erreurs de recette"
+    args: ["-f", "test_failcmd.in"]
+    exit_code: 2
+    output_file: "test_failcmd.out_e"
+
+  - name: "échec au milieu → commandes suivantes non exécutées"
+    category: "Erreurs de recette"
+    args: ["-f", "test_failmid.in"]
+    exit_code: 2
+    output_file: "test_failmid.out_e"
+
+  - name: "cible inconnue passée en argument → exit 2"
+    category: "Erreurs de recette"
+    args: ["-f", "Minimakefile.in", "nonexistenttarget"]
+    exit_code: 2
+    check_stdout: false

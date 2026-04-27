@@ -1,0 +1,4 @@
+all:
+	echo first
+	false
+	echo third

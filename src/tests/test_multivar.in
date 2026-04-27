@@ -1,0 +1,5 @@
+MSG = hello
+NAME = world
+
+all:
+	echo ${MSG} ${NAME}

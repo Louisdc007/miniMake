@@ -1,0 +1,7 @@
+# variables
+'MSG' = 'hello'
+'NAME' = 'world'
+
+# rules
+(all):
+	'echo ${MSG} ${NAME}'

@@ -1,0 +1,5 @@
+all:
+	echo this is all
+
+clean:
+	echo this is clean

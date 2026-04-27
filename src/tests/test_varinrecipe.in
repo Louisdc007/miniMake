@@ -1,0 +1,6 @@
+GREETING = hello
+TARGET = world
+
+all:
+	echo ${GREETING} ${TARGET}
+	echo done with ${TARGET}
