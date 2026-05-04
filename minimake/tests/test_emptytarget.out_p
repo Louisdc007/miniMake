@@ -1,0 +1,6 @@
+# variables
+'TGT' = ''
+
+# rules
+(real):
+	'echo real'

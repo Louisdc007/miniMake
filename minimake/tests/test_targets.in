@@ -1,0 +1,8 @@
+all:
+	echo all
+
+clean:
+	echo clean
+
+build:
+	echo build

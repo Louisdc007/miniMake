@@ -1,0 +1,4 @@
+VAR = hello # world
+
+all:
+	echo ${VAR}

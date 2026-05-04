@@ -1,0 +1,6 @@
+# variables
+'FOO' = 'bar'
+
+# rules
+(all):
+	'echo ${FOO}'

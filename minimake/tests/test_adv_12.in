@@ -1,0 +1,4 @@
+A=$(B)
+B=hello
+all:
+	echo $(A)

@@ -1,0 +1,2 @@
+sh -c 'exit 2'
+minimake: *** [all] Error 2

@@ -1,0 +1,2 @@
+target_with_long_name:
+	echo $@

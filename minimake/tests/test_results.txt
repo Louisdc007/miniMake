@@ -1,0 +1,248 @@
+
+[96m[1m── Flags CLI ─────────────────────────────────────────────[0m
+  [92m[PASS][0m -h seul
+  [92m[PASS][0m -h prioritaire sur -p
+  [92m[PASS][0m -p -h → aide quand meme
+  [92m[PASS][0m -h prioritaire sur -f inexistant
+  [92m[PASS][0m -f -h → ouvre fichier -h (pas aide)
+  [92m[PASS][0m -f sans argument → exit 2
+  [92m[PASS][0m -f fichier inexistant → exit 3
+  [92m[PASS][0m -f multiple → dernier gagne
+
+[96m[1m── Mode -p ───────────────────────────────────────────────[0m
+  [92m[PASS][0m -p basique (Minimakefile)
+  [92m[PASS][0m -p sans variables
+  [92m[PASS][0m -p deux variables
+  [92m[PASS][0m -p variable reference une autre
+  [92m[PASS][0m -p variable definie apres → vide
+  [92m[PASS][0m -p variable dans recette non expandue
+  [92m[PASS][0m -p rule avec multiples deps
+  [92m[PASS][0m -p rule sans deps
+  [92m[PASS][0m -p sparse rule (lignes vides entre recettes)
+  [92m[PASS][0m -p variable dans dep expandue
+  [92m[PASS][0m -p variable dans target expandue
+  [92m[PASS][0m -p target vide apres expansion → ignoree
+  [92m[PASS][0m -p dep vide apres expansion → ignoree
+  [92m[PASS][0m -p inline comment supprime
+  [92m[PASS][0m -p rule sans recette
+  [92m[PASS][0m -p trailing spaces dans variable
+
+[96m[1m── Execution basique ─────────────────────────────────────[0m
+  [92m[PASS][0m execution basique echo
+  [92m[PASS][0m execution simple echo hello
+  [92m[PASS][0m plusieurs recettes dans l'ordre
+  [92m[PASS][0m variable substituee dans recette
+  [92m[PASS][0m variable definie apres → vide au parsing
+  [92m[PASS][0m variable definie apres recette → expandue a l'exec
+  [92m[PASS][0m variable non definie → chaine vide
+  [92m[PASS][0m commentaire # dans recette → passe au shell
+  [92m[PASS][0m inline comment dans variable
+  [92m[PASS][0m rule sans recette → exit 0 silencieux
+  [92m[PASS][0m sparse rule → commandes executees
+  [92m[PASS][0m dep vide apres expansion → ignoree
+  [92m[PASS][0m trailing spaces dans valeur variable
+
+[96m[1m── Selection de cible ────────────────────────────────────[0m
+  [92m[PASS][0m cible par defaut (premiere regle)
+  [92m[PASS][0m cible explicite clean
+  [92m[PASS][0m cible explicite build
+  [92m[PASS][0m deux cibles → executees dans l'ordre
+  [92m[PASS][0m cible en argument avant -f
+
+[96m[1m── Dependances ───────────────────────────────────────────[0m
+  [92m[PASS][0m chaine dep A→B (2 niveaux)
+  [92m[PASS][0m chaine dep A→B→C (3 niveaux)
+  [92m[PASS][0m variable comme nom de dep
+  [92m[PASS][0m dep avec multiple deps
+  [92m[PASS][0m dep introuvable → exit 2
+
+[96m[1m── Erreurs ───────────────────────────────────────────────[0m
+  [92m[PASS][0m false → exit 2
+  [92m[PASS][0m echec mid-recette → arret
+  [92m[PASS][0m deux cibles, premiere echoue, deuxieme s'execute
+  [92m[PASS][0m cible inconnue → exit 2
+  [92m[PASS][0m makefile vide (aucune regle) → exit 2
+  [92m[PASS][0m commande introuvable → Error 127
+
+[96m[1m── Up-to-date ────────────────────────────────────────────[0m
+  [92m[PASS][0m cible a jour (newer que dep)
+  [92m[PASS][0m cible perimee (older que dep) → rebuild
+  [92m[PASS][0m cible absente → rebuild
+  [92m[PASS][0m cible a jour sans deps
+
+[96m[1m── exec_variables ────────────────────────────────────────[0m
+  [92m[PASS][0m Var syntax $(VAR)
+  [92m[PASS][0m Var syntax ${VAR}
+  [92m[PASS][0m Var syntax $A
+  [92m[PASS][0m Var syntax $$
+  [92m[PASS][0m Var syntax $$$A
+  [92m[PASS][0m Var unknown
+  [92m[PASS][0m Var empty
+  [92m[PASS][0m Var spaces
+  [92m[PASS][0m Var numbers
+  [92m[PASS][0m Var special chars
+  [92m[PASS][0m Nested var 1
+  [91m[FAIL][0m [1mNested var 2[0m
+         stdout mismatch:
+             line 1: expected 'echo hello'  got 'echo'
+           line 2: expected 'hello'  got ''
+           ---- expected ----
+         echo hello
+         hello
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mNested var 3[0m
+         stdout mismatch:
+             line 1: expected 'echo hello world'  got 'echo'
+           line 2: expected 'hello world'  got ''
+           ---- expected ----
+         echo hello world
+         hello world
+           ---- got --------
+         echo  
+         
+  [91m[FAIL][0m [1mNested var 4[0m
+         stdout mismatch:
+             line 1: expected 'echo hello'  got 'echo'
+           line 2: expected 'hello'  got ''
+           ---- expected ----
+         echo hello
+         hello
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mNested var 5[0m
+         stdout mismatch:
+             line 1: expected 'echo hello world'  got 'echo'
+           line 2: expected 'hello world'  got ''
+           ---- expected ----
+         echo hello world
+         hello world
+           ---- got --------
+         echo 
+         
+  [92m[PASS][0m Nested var missing
+  [92m[PASS][0m Var in target
+  [92m[PASS][0m Var in dep
+  [92m[PASS][0m Var in recipe
+  [92m[PASS][0m Var in target and dep
+  [92m[PASS][0m Auto $@
+  [92m[PASS][0m Auto $<
+  [92m[PASS][0m Auto $^
+  [91m[FAIL][0m [1mAuto $@ nested[0m
+         stdout mismatch:
+             line 1: expected 'echo all'  got 'echo'
+           line 2: expected 'all'  got ''
+           ---- expected ----
+         echo all
+         all
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mAuto $< nested[0m
+         stdout mismatch:
+             line 2: expected "/bin/sh: -c: line 0: syntax error near unexpected token 'newline'"  got 'minimake: *** [all] Error 2'
+           expected 4 lines, got 2 lines
+           ---- expected ----
+         echo \|<
+         /bin/sh: -c: line 0: syntax error near unexpected token 'newline'
+         /bin/sh: -c: line 0: 'echo \|<'
+         minimake: *** [all] Error 2
+           ---- got --------
+         echo \|<
+         minimake: *** [all] Error 2
+  [91m[FAIL][0m [1mAuto $^ nested[0m
+         stdout mismatch:
+             line 1: expected 'echo dep1 dep2'  got 'echo'
+           line 2: expected 'dep1 dep2'  got ''
+           ---- expected ----
+         echo dep1 dep2
+         dep1 dep2
+           ---- got --------
+         echo 
+         
+  [92m[PASS][0m Auto variables combined
+  [92m[PASS][0m Auto variables with suffix
+  [92m[PASS][0m Auto variables empty dep
+  [92m[PASS][0m Auto variables $@
+
+[96m[1m── exec_global ───────────────────────────────────────────[0m
+  [92m[PASS][0m No deps
+  [92m[PASS][0m One dep
+  [92m[PASS][0m Multiple deps
+  [92m[PASS][0m Deep deps
+  [91m[FAIL][0m [1mRepeated deps[0m
+         stdout mismatch:
+             line 3: expected 'echo all'  got 'echo d1'
+           line 4: expected 'all'  got 'd1'
+           expected 4 lines, got 8 lines
+           ---- expected ----
+         echo d1
+         d1
+         echo all
+         all
+           ---- got --------
+         echo d1
+         d1
+         echo d1
+         d1
+         echo d1
+         d1
+         echo all
+         all
+  [91m[FAIL][0m [1mCircular deps fallback[0m
+         exit code: expected 0, got -6
+           stderr: 'AddressSanitizer:DEADLYSIGNAL\n=================================================================\n==16510==ERROR: AddressSanitizer: stack-overflow on address 0x00016b4179d0 (pc 0x000180c90870 bp 0x00016b418230 sp 0x00016b4179e0 T0)\n    #0 0x000180c90870 in stat+0x10 (libsystem_kernel.dylib:arm64e+0xc870)\n    #1 0x0001041f30c4 in build_target exe.c:86\n    #2 0x0001041f3310 in build_target exe.c:102\n    #3 0x0001041f3310 in build_target exe.c:102\n    #4 0x0001041f3310 in build_target exe.c:102\n    #5 0x0001041f3310 in build_target exe.c:102\n    #6 0x0001041f3310 in build_target exe.c:102\n    #7 0x0001041f3310 in build_target exe.c:102\n    #8 0x0001041f3310 in build_target exe.c:102\n    #9 0x0001041f3310 in build_target exe.c:102\n    #10 0x0001041f3310 in build_target exe.c:102\n    #11 0x0001041f3310 in build_target exe.c:102\n    #12 0x0001041f3310 in build_target exe.c:102\n    #13 0x0001041f3310 in build_target exe.c:102\n    #14 0x0001041f3310 in build_target exe.c:102\n    #15 0x0001041f3310 in build_target exe.c:102\n    #16 0x0001041f3310 in build_target exe.c:102\n    #17 0x0001041f3310 in build_target exe.c:102\n    #18 0x0001041f3310 in build_target exe.c:102\n    #19 0x0001041f3310 in build_target exe.c:102\n    #20 0x0001041f3310 in build_target exe.c:102\n    #21 0x0001041f3310 in build_target exe.c:102\n    #22 0x0001041f3310 in build_target exe.c:102\n    #23 0x0001041f3310 in build_target exe.c:102\n    #24 0x0001041f3310 in build_target exe.c:102\n    #25 0x0001041f3310 in build_target exe.c:102\n    #26 0x0001041f3310 in build_target exe.c:102\n    #27 0x0001041f3310 in build_target exe.c:102\n    #28 0x0001041f3310 in build_target exe.c:102\n    #29 0x0001041f3310 in build_target exe.c:102\n    #30 0x0001041f3310 in build_target exe.c:102\n    #31 0x0001041f3310 in build_target exe.c:102\n    #32 0x0001041f3310 in build_target exe.c:102\n    #33 0x0001041f3310 in build_target exe.c:102\n    #34 0x0001041f3310 in build_target exe.c:102\n    #35 0x0001041f3310 in build_target exe.c:102\n    #36 0x0001041f3310 in build_target exe.c:102\n    #37 0x0001041f3310 in build_target exe.c:102\n    #38 0x0001041f3310 in build_target exe.c:102\n    #39 0x0001041f3310 in build_target exe.c:102\n    #40 0x0001041f3310 in build_target exe.c:102\n    #41 0x0001041f3310 in build_target exe.c:102\n    #42 0x0001041f3310 in build_target exe.c:102\n    #43 0x0001041f3310 in build_target exe.c:102\n    #44 0x0001041f3310 in build_target exe.c:102\n    #45 0x0001041f3310 in build_target exe.c:102\n    #46 0x0001041f3310 in build_target exe.c:102\n    #47 0x0001041f3310 in build_target exe.c:102\n    #48 0x0001041f3310 in build_target exe.c:102\n    #49 0x0001041f3310 in build_target exe.c:102\n    #50 0x0001041f3310 in build_target exe.c:102\n    #51 0x0001041f3310 in build_target exe.c:102\n    #52 0x0001041f3310 in build_target exe.c:102\n    #53 0x0001041f3310 in build_target exe.c:102\n    #54 0x0001041f3310 in build_target exe.c:102\n    #55 0x0001041f3310 in build_target exe.c:102\n    #56 0x0001041f3310 in build_target exe.c:102\n    #57 0x0001041f3310 in build_target exe.c:102\n    #58 0x0001041f3310 in build_target exe.c:102\n    #59 0x0001041f3310 in build_target exe.c:102\n    #60 0x0001041f3310 in build_target exe.c:102\n    #61 0x0001041f3310 in build_target exe.c:102\n    #62 0x0001041f3310 in build_target exe.c:102\n    #63 0x0001041f3310 in build_target exe.c:102\n    #64 0x0001041f3310 in build_target exe.c:102\n    #65 0x0001041f3310 in build_target exe.c:102\n    #66 0x0001041f3310 in build_target exe.c:102\n    #67 0x0001041f3310 in build_target exe.c:102\n    #68 0x0001041f3310 in build_target exe.c:102\n    #69 0x0001041f3310 in build_target exe.c:102\n    #70 0x0001041f3310 in build_target exe.c:102\n    #71 0x0001041f3310 in build_target exe.c:102\n    #72 0x0001041f3310 in build_target exe.c:102\n    #73 0x0001041f3310 in build_target exe.c:102\n    #74 0x0001041f3310 in build_target exe.c:102\n    #75 0x0001041f3310 in build_target exe.c:102\n    #76 0x0001041f3310 in build_target exe.c:102\n    #77 0x0001041f3310 in build_target exe.c:102\n    #78 0x0001041f3310 in build_target exe.c:102\n    #79 0x0001041f3310 in build_target exe.c:102\n    #80 0x0001041f3310 in build_target exe.c:102\n    #81 0x0001041f3310 in build_target exe.c:102\n    #82 0x0001041f3310 in build_target exe.c:102\n    #83 0x0001041f3310 in build_target exe.c:102\n    #84 0x0001041f3310 in build_target exe.c:102\n    #85 0x0001041f3310 in build_target exe.c:102\n    #86 0x0001041f3310 in build_target exe.c:102\n    #87 0x0001041f3310 in build_target exe.c:102\n    #88 0x0001041f3310 in build_target exe.c:102\n    #89 0x0001041f3310 in build_target exe.c:102\n    #90 0x0001041f3310 in build_target exe.c:102\n    #91 0x0001041f3310 in build_target exe.c:102\n    #92 0x0001041f3310 in build_target exe.c:102\n    #93 0x0001041f3310 in build_target exe.c:102\n    #94 0x0001041f3310 in build_target exe.c:102\n    #95 0x0001041f3310 in build_target exe.c:102\n    #96 0x0001041f3310 in build_target exe.c:102\n    #97 0x0001041f3310 in build_target exe.c:102\n    #98 0x0001041f3310 in build_target exe.c:102\n    #99 0x0001041f3310 in build_target exe.c:102\n    #100 0x0001041f3310 in build_target exe.c:102\n    #101 0x0001041f3310 in build_target exe.c:102\n    #102 0x0001041f3310 in build_target exe.c:102\n    #103 0x0001041f3310 in build_target exe.c:102\n    #104 0x0001041f3310 in build_target exe.c:102\n    #105 0x0001041f3310 in build_target exe.c:102\n    #106 0x0001041f3310 in build_target exe.c:102\n    #107 0x0001041f3310 in build_target exe.c:102\n    #108 0x0001041f3310 in build_target exe.c:102\n    #109 0x0001041f3310 in build_target exe.c:102\n    #110 0x0001041f3310 in build_target exe.c:102\n    #111 0x0001041f3310 in build_target exe.c:102\n    #112 0x0001041f3310 in build_target exe.c:102\n    #113 0x0001041f3310 in build_target exe.c:102\n    #114 0x0001041f3310 in build_target exe.c:102\n    #115 0x0001041f3310 in build_target exe.c:102\n    #116 0x0001041f3310 in build_target exe.c:102\n    #117 0x0001041f3310 in build_target exe.c:102\n    #118 0x0001041f3310 in build_target exe.c:102\n    #119 0x0001041f3310 in build_target exe.c:102\n    #120 0x0001041f3310 in build_target exe.c:102\n    #121 0x0001041f3310 in build_target exe.c:102\n    #122 0x0001041f3310 in build_target exe.c:102\n    #123 0x0001041f3310 in build_target exe.c:102\n    #124 0x0001041f3310 in build_target exe.c:102\n    #125 0x0001041f3310 in build_target exe.c:102\n    #126 0x0001041f3310 in build_target exe.c:102\n    #127 0x0001041f3310 in build_target exe.c:102\n    #128 0x0001041f3310 in build_target exe.c:102\n    #129 0x0001041f3310 in build_target exe.c:102\n    #130 0x0001041f3310 in build_target exe.c:102\n    #131 0x0001041f3310 in build_target exe.c:102\n    #132 0x0001041f3310 in build_target exe.c:102\n    #133 0x0001041f3310 in build_target exe.c:102\n    #134 0x0001041f3310 in build_target exe.c:102\n    #135 0x0001041f3310 in build_target exe.c:102\n    #136 0x0001041f3310 in build_target exe.c:102\n    #137 0x0001041f3310 in build_target exe.c:102\n    #138 0x0001041f3310 in build_target exe.c:102\n    #139 0x0001041f3310 in build_target exe.c:102\n    #140 0x0001041f3310 in build_target exe.c:102\n    #141 0x0001041f3310 in build_target exe.c:102\n    #142 0x0001041f3310 in build_target exe.c:102\n    #143 0x0001041f3310 in build_target exe.c:102\n    #144 0x0001041f3310 in build_target exe.c:102\n    #145 0x0001041f3310 in build_target exe.c:102\n    #146 0x0001041f3310 in build_target exe.c:102\n    #147 0x0001041f3310 in build_target exe.c:102\n    #148 0x0001041f3310 in build_target exe.c:102\n    #149 0x0001041f3310 in build_target exe.c:102\n    #150 0x0001041f3310 in build_target exe.c:102\n    #151 0x0001041f3310 in build_target exe.c:102\n    #152 0x0001041f3310 in build_target exe.c:102\n    #153 0x0001041f3310 in build_target exe.c:102\n    #154 0x0001041f3310 in build_target exe.c:102\n    #155 0x0001041f3310 in build_target exe.c:102\n    #156 0x0001041f3310 in build_target exe.c:102\n    #157 0x0001041f3310 in build_target exe.c:102\n    #158 0x0001041f3310 in build_target exe.c:102\n    #159 0x0001041f3310 in build_target exe.c:102\n    #160 0x0001041f3310 in build_target exe.c:102\n    #161 0x0001041f3310 in build_target exe.c:102\n    #162 0x0001041f3310 in build_target exe.c:102\n    #163 0x0001041f3310 in build_target exe.c:102\n    #164 0x0001041f3310 in build_target exe.c:102\n    #165 0x0001041f3310 in build_target exe.c:102\n    #166 0x0001041f3310 in build_target exe.c:102\n    #167 0x0001041f3310 in build_target exe.c:102\n    #168 0x0001041f3310 in build_target exe.c:102\n    #169 0x0001041f3310 in build_target exe.c:102\n    #170 0x0001041f3310 in build_target exe.c:102\n    #171 0x0001041f3310 in build_target exe.c:102\n    #172 0x0001041f3310 in build_target exe.c:102\n    #173 0x0001041f3310 in build_target exe.c:102\n    #174 0x0001041f3310 in build_target exe.c:102\n    #175 0x0001041f3310 in build_target exe.c:102\n    #176 0x0001041f3310 in build_target exe.c:102\n    #177 0x0001041f3310 in build_target exe.c:102\n    #178 0x0001041f3310 in build_target exe.c:102\n    #179 0x0001041f3310 in build_target exe.c:102\n    #180 0x0001041f3310 in build_target exe.c:102\n    #181 0x0001041f3310 in build_target exe.c:102\n    #182 0x0001041f3310 in build_target exe.c:102\n    #183 0x0001041f3310 in build_target exe.c:102\n    #184 0x0001041f3310 in build_target exe.c:102\n    #185 0x0001041f3310 in build_target exe.c:102\n    #186 0x0001041f3310 in build_target exe.c:102\n    #187 0x0001041f3310 in build_target exe.c:102\n    #188 0x0001041f3310 in build_target exe.c:102\n    #189 0x0001041f3310 in build_target exe.c:102\n    #190 0x0001041f3310 in build_target exe.c:102\n    #191 0x0001041f3310 in build_target exe.c:102\n    #192 0x0001041f3310 in build_target exe.c:102\n    #193 0x0001041f3310 in build_target exe.c:102\n    #194 0x0001041f3310 in build_target exe.c:102\n    #195 0x0001041f3310 in build_target exe.c:102\n    #196 0x0001041f3310 in build_target exe.c:102\n    #197 0x0001041f3310 in build_target exe.c:102\n    #198 0x0001041f3310 in build_target exe.c:102\n    #199 0x0001041f3310 in build_target exe.c:102\n    #200 0x0001041f3310 in build_target exe.c:102\n    #201 0x0001041f3310 in build_target exe.c:102\n    #202 0x0001041f3310 in build_target exe.c:102\n    #203 0x0001041f3310 in build_target exe.c:102\n    #204 0x0001041f3310 in build_target exe.c:102\n    #205 0x0001041f3310 in build_target exe.c:102\n    #206 0x0001041f3310 in build_target exe.c:102\n    #207 0x0001041f3310 in build_target exe.c:102\n    #208 0x0001041f3310 in build_target exe.c:102\n    #209 0x0001041f3310 in build_target exe.c:102\n    #210 0x0001041f3310 in build_target exe.c:102\n    #211 0x0001041f3310 in build_target exe.c:102\n    #212 0x0001041f3310 in build_target exe.c:102\n    #213 0x0001041f3310 in build_target exe.c:102\n    #214 0x0001041f3310 in build_target exe.c:102\n    #215 0x0001041f3310 in build_target exe.c:102\n    #216 0x0001041f3310 in build_target exe.c:102\n    #217 0x0001041f3310 in build_target exe.c:102\n    #218 0x0001041f3310 in build_target exe.c:102\n    #219 0x0001041f3310 in build_target exe.c:102\n    #220 0x0001041f3310 in build_target exe.c:102\n    #221 0x0001041f3310 in build_target exe.c:102\n    #222 0x0001041f3310 in build_target exe.c:102\n    #223 0x0001041f3310 in build_target exe.c:102\n    #224 0x0001041f3310 in build_target exe.c:102\n    #225 0x0001041f3310 in build_target exe.c:102\n    #226 0x0001041f3310 in build_target exe.c:102\n    #227 0x0001041f3310 in build_target exe.c:102\n    #228 0x0001041f3310 in build_target exe.c:102\n    #229 0x0001041f3310 in build_target exe.c:102\n    #230 0x0001041f3310 in build_target exe.c:102\n    #231 0x0001041f3310 in build_target exe.c:102\n    #232 0x0001041f3310 in build_target exe.c:102\n    #233 0x0001041f3310 in build_target exe.c:102\n    #234 0x0001041f3310 in build_target exe.c:102\n    #235 0x0001041f3310 in build_target exe.c:102\n    #236 0x0001041f3310 in build_target exe.c:102\n    #237 0x0001041f3310 in build_target exe.c:102\n    #238 0x0001041f3310 in build_target exe.c:102\n    #239 0x0001041f3310 in build_target exe.c:102\n    #240 0x0001041f3310 in build_target exe.c:102\n    #241 0x0001041f3310 in build_target exe.c:102\n    #242 0x0001041f3310 in build_target exe.c:102\n    #243 0x0001041f3310 in build_target exe.c:102\n    #244 0x0001041f3310 in build_target exe.c:102\n    #245 0x0001041f3310 in build_target exe.c:102\n    #246 0x0001041f3310 in build_target exe.c:102\n    #247 0x0001041f3310 in build_target exe.c:102\n    #248 0x0001041f3310 in build_target exe.c:102\n    #249 0x0001041f3310 in build_target exe.c:102\n    #250 0x0001041f3310 in build_target exe.c:102\n    #251 0x0001041f3310 in build_target exe.c:102\n    #252 0x0001041f3310 in build_target exe.c:102\n    #253 0x0001041f3310 in build_target exe.c:102\n    #254 0x0001041f3310 in build_target exe.c:102\n\nSUMMARY: AddressSanitizer: stack-overflow (libsystem_kernel.dylib:arm64e+0xc870) in stat+0x10\n==16510==ABORTING'
+         stdout mismatch:
+             expected 2 lines, got 0 lines
+           ---- expected ----
+         minimake: Circular d2 <- d1 dependency dropped.
+         minimake: Nothing to be done for 'all'.
+           ---- got --------
+  [92m[PASS][0m Missing dep
+  [92m[PASS][0m Missing target
+  [92m[PASS][0m Empty line between rules
+  [92m[PASS][0m Comments everywhere
+  [92m[PASS][0m Multiple recipes
+  [92m[PASS][0m Failing recipe
+  [91m[FAIL][0m [1mEmpty recipe line[0m
+         stdout mismatch:
+             line 1: expected 'echo hello'  got ''
+           line 2: expected 'hello'  got 'echo hello'
+           expected 2 lines, got 3 lines
+           ---- expected ----
+         echo hello
+         hello
+           ---- got --------
+         
+         echo hello
+         hello
+  [92m[PASS][0m Spaces before target
+  [92m[PASS][0m Spaces in deps
+  [92m[PASS][0m Target with dot
+  [92m[PASS][0m Target with underscore
+  [92m[PASS][0m Target with dash
+  [92m[PASS][0m Recipe with exit
+  [91m[FAIL][0m [1mMany rules[0m
+         stdout mismatch:
+             expected 1 lines, got 0 lines
+           ---- expected ----
+         minimake: Nothing to be done for 'all'.
+           ---- got --------
+
+[1m────────────────────────────────────────────────────────────[0m
+[91m[1m  96/107 tests passed[0m
+  [91mFailed:[0m
+    • Nested var 2
+    • Nested var 3
+    • Nested var 4
+    • Nested var 5
+    • Auto $@ nested
+    • Auto $< nested
+    • Auto $^ nested
+    • Repeated deps
+    • Circular deps fallback
+    • Empty recipe line
+    • Many rules
+

@@ -1,0 +1,4 @@
+false
+minimake: *** [bad] Error 1
+echo good
+good

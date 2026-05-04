@@ -1,0 +1,7 @@
+# comment
+VAR = test
+
+# another comment
+all:
+	echo ${VAR}
+	# recipe comment

@@ -1,0 +1,5 @@
+A=$(B) $(C)
+B=hello
+C=world
+all:
+	echo $(A)

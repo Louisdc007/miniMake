@@ -1,5 +1,0 @@
-all: dep1
-	echo all done
-
-dep1:
-	echo dep1 done

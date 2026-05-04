@@ -1,0 +1,6 @@
+all:
+	echo all
+
+
+d1:
+	echo d1

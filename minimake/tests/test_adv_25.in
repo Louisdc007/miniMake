@@ -1,0 +1,4 @@
+A=\|<
+all: dep1
+	echo $(A)
+dep1:

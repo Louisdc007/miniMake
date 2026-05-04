@@ -1,0 +1,6 @@
+# variables
+'VAR' = 'hello '
+
+# rules
+(all):
+	'echo ${VAR}'

@@ -1,5 +1,0 @@
-# This is a full-line comment
-CC = gcc # inline comment stripped
-
-all: # deps after comment are stripped
-	echo ${CC}

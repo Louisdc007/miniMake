@@ -1,0 +1,247 @@
+
+[96m[1m── Flags CLI ─────────────────────────────────────────────[0m
+  [92m[PASS][0m -h seul
+  [92m[PASS][0m -h prioritaire sur -p
+  [92m[PASS][0m -p -h → aide quand meme
+  [92m[PASS][0m -h prioritaire sur -f inexistant
+  [92m[PASS][0m -f -h → ouvre fichier -h (pas aide)
+  [92m[PASS][0m -f sans argument → exit 2
+  [92m[PASS][0m -f fichier inexistant → exit 3
+  [92m[PASS][0m -f multiple → dernier gagne
+
+[96m[1m── Mode -p ───────────────────────────────────────────────[0m
+  [92m[PASS][0m -p basique (Minimakefile)
+  [92m[PASS][0m -p sans variables
+  [92m[PASS][0m -p deux variables
+  [92m[PASS][0m -p variable reference une autre
+  [92m[PASS][0m -p variable definie apres → vide
+  [92m[PASS][0m -p variable dans recette non expandue
+  [92m[PASS][0m -p rule avec multiples deps
+  [92m[PASS][0m -p rule sans deps
+  [92m[PASS][0m -p sparse rule (lignes vides entre recettes)
+  [92m[PASS][0m -p variable dans dep expandue
+  [92m[PASS][0m -p variable dans target expandue
+  [92m[PASS][0m -p target vide apres expansion → ignoree
+  [92m[PASS][0m -p dep vide apres expansion → ignoree
+  [92m[PASS][0m -p inline comment supprime
+  [92m[PASS][0m -p rule sans recette
+  [92m[PASS][0m -p trailing spaces dans variable
+
+[96m[1m── Execution basique ─────────────────────────────────────[0m
+  [92m[PASS][0m execution basique echo
+  [92m[PASS][0m execution simple echo hello
+  [92m[PASS][0m plusieurs recettes dans l'ordre
+  [92m[PASS][0m variable substituee dans recette
+  [92m[PASS][0m variable definie apres → vide au parsing
+  [92m[PASS][0m variable definie apres recette → expandue a l'exec
+  [92m[PASS][0m variable non definie → chaine vide
+  [92m[PASS][0m commentaire # dans recette → passe au shell
+  [92m[PASS][0m inline comment dans variable
+  [91m[FAIL][0m [1mrule sans recette → exit 0 silencieux[0m
+         stdout mismatch:
+             expected 0 lines, got 1 lines
+           ---- expected ----
+           ---- got --------
+         minimake: Nothing to be done for 'all'.
+  [92m[PASS][0m sparse rule → commandes executees
+  [92m[PASS][0m dep vide apres expansion → ignoree
+  [92m[PASS][0m trailing spaces dans valeur variable
+
+[96m[1m── Selection de cible ────────────────────────────────────[0m
+  [92m[PASS][0m cible par defaut (premiere regle)
+  [92m[PASS][0m cible explicite clean
+  [92m[PASS][0m cible explicite build
+  [92m[PASS][0m deux cibles → executees dans l'ordre
+  [92m[PASS][0m cible en argument avant -f
+
+[96m[1m── Dependances ───────────────────────────────────────────[0m
+  [92m[PASS][0m chaine dep A→B (2 niveaux)
+  [92m[PASS][0m chaine dep A→B→C (3 niveaux)
+  [92m[PASS][0m variable comme nom de dep
+  [92m[PASS][0m dep avec multiple deps
+  [92m[PASS][0m dep introuvable → exit 2
+
+[96m[1m── Erreurs ───────────────────────────────────────────────[0m
+  [92m[PASS][0m false → exit 2
+  [92m[PASS][0m echec mid-recette → arret
+  [92m[PASS][0m deux cibles, premiere echoue, deuxieme s'execute
+  [92m[PASS][0m cible inconnue → exit 2
+  [92m[PASS][0m makefile vide (aucune regle) → exit 2
+  [92m[PASS][0m commande introuvable → Error 127
+
+[96m[1m── Up-to-date ────────────────────────────────────────────[0m
+  [92m[PASS][0m cible a jour (newer que dep)
+  [92m[PASS][0m cible perimee (older que dep) → rebuild
+  [92m[PASS][0m cible absente → rebuild
+  [92m[PASS][0m cible a jour sans deps
+
+[96m[1m── exec_variables ────────────────────────────────────────[0m
+  [92m[PASS][0m Var syntax $(VAR)
+  [92m[PASS][0m Var syntax ${VAR}
+  [92m[PASS][0m Var syntax $A
+  [92m[PASS][0m Var syntax $$
+  [92m[PASS][0m Var syntax $$$A
+  [92m[PASS][0m Var unknown
+  [92m[PASS][0m Var empty
+  [92m[PASS][0m Var spaces
+  [92m[PASS][0m Var numbers
+  [92m[PASS][0m Var special chars
+  [92m[PASS][0m Nested var 1
+  [91m[FAIL][0m [1mNested var 2[0m
+         stdout mismatch:
+             line 1: expected 'echo hello'  got 'echo'
+           line 2: expected 'hello'  got ''
+           ---- expected ----
+         echo hello
+         hello
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mNested var 3[0m
+         stdout mismatch:
+             line 1: expected 'echo hello world'  got 'echo'
+           line 2: expected 'hello world'  got ''
+           ---- expected ----
+         echo hello world
+         hello world
+           ---- got --------
+         echo  
+         
+  [91m[FAIL][0m [1mNested var 4[0m
+         stdout mismatch:
+             line 1: expected 'echo hello'  got 'echo'
+           line 2: expected 'hello'  got ''
+           ---- expected ----
+         echo hello
+         hello
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mNested var 5[0m
+         stdout mismatch:
+             line 1: expected 'echo hello world'  got 'echo'
+           line 2: expected 'hello world'  got ''
+           ---- expected ----
+         echo hello world
+         hello world
+           ---- got --------
+         echo 
+         
+  [92m[PASS][0m Nested var missing
+  [92m[PASS][0m Var in target
+  [91m[FAIL][0m [1mVar in dep[0m
+         stdout mismatch:
+             expected 2 lines, got 3 lines
+           ---- expected ----
+         echo dep
+         dep
+           ---- got --------
+         echo dep
+         dep
+         minimake: Nothing to be done for 'all'.
+  [92m[PASS][0m Var in recipe
+  [91m[FAIL][0m [1mVar in target and dep[0m
+         stdout mismatch:
+             expected 2 lines, got 3 lines
+           ---- expected ----
+         echo dep
+         dep
+           ---- got --------
+         echo dep
+         dep
+         minimake: Nothing to be done for 'all'.
+  [92m[PASS][0m Auto $@
+  [92m[PASS][0m Auto $<
+  [92m[PASS][0m Auto $^
+  [91m[FAIL][0m [1mAuto $@ nested[0m
+         stdout mismatch:
+             line 1: expected 'echo all'  got 'echo'
+           line 2: expected 'all'  got ''
+           ---- expected ----
+         echo all
+         all
+           ---- got --------
+         echo 
+         
+  [91m[FAIL][0m [1mAuto $< nested[0m
+         stdout mismatch:
+             line 2: expected "/bin/sh: -c: line 0: syntax error near unexpected token 'newline'"  got 'minimake: *** [all] Error 2'
+           expected 4 lines, got 2 lines
+           ---- expected ----
+         echo \|<
+         /bin/sh: -c: line 0: syntax error near unexpected token 'newline'
+         /bin/sh: -c: line 0: 'echo \|<'
+         minimake: *** [all] Error 2
+           ---- got --------
+         echo \|<
+         minimake: *** [all] Error 2
+  [91m[FAIL][0m [1mAuto $^ nested[0m
+         stdout mismatch:
+             line 1: expected 'echo dep1 dep2'  got 'echo'
+           line 2: expected 'dep1 dep2'  got ''
+           ---- expected ----
+         echo dep1 dep2
+         dep1 dep2
+           ---- got --------
+         echo 
+         
+  [92m[PASS][0m Auto variables combined
+  [92m[PASS][0m Auto variables with suffix
+  [92m[PASS][0m Auto variables empty dep
+  [92m[PASS][0m Auto variables $@
+
+[96m[1m── exec_global ───────────────────────────────────────────[0m
+  [92m[PASS][0m No deps
+  [92m[PASS][0m One dep
+  [92m[PASS][0m Multiple deps
+  [92m[PASS][0m Deep deps
+  [92m[PASS][0m Repeated deps
+  [91m[FAIL][0m [1mCircular deps fallback[0m
+         stdout mismatch:
+             line 1: expected 'minimake: Circular d2 <- d1 dependency dropped.'  got 'minimake: Circular d1 <- d2 dependency dropped.'
+           ---- expected ----
+         minimake: Circular d2 <- d1 dependency dropped.
+         minimake: Nothing to be done for 'all'.
+           ---- got --------
+         minimake: Circular d1 <- d2 dependency dropped.
+         minimake: Nothing to be done for 'all'.
+  [92m[PASS][0m Missing dep
+  [91m[FAIL][0m [1mMissing target[0m
+         stdout mismatch:
+             expected 2 lines, got 3 lines
+           ---- expected ----
+         echo d1
+         d1
+           ---- got --------
+         echo d1
+         d1
+         minimake: Nothing to be done for 'all'.
+  [92m[PASS][0m Empty line between rules
+  [92m[PASS][0m Comments everywhere
+  [92m[PASS][0m Multiple recipes
+  [92m[PASS][0m Failing recipe
+  [92m[PASS][0m Empty recipe line
+  [92m[PASS][0m Spaces before target
+  [92m[PASS][0m Spaces in deps
+  [92m[PASS][0m Target with dot
+  [92m[PASS][0m Target with underscore
+  [92m[PASS][0m Target with dash
+  [92m[PASS][0m Recipe with exit
+  [92m[PASS][0m Many rules
+
+[1m────────────────────────────────────────────────────────────[0m
+[91m[1m  95/107 tests passed[0m
+  [91mFailed:[0m
+    • rule sans recette → exit 0 silencieux
+    • Nested var 2
+    • Nested var 3
+    • Nested var 4
+    • Nested var 5
+    • Var in dep
+    • Var in target and dep
+    • Auto $@ nested
+    • Auto $< nested
+    • Auto $^ nested
+    • Circular deps fallback
+    • Missing target
+

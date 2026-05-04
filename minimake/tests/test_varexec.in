@@ -1,0 +1,4 @@
+all:
+	echo ${FOO}
+
+FOO = bar

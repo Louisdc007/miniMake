@@ -1,0 +1,2 @@
+all: missing
+	echo all

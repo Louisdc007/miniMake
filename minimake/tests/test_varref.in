@@ -1,0 +1,5 @@
+A = hello
+B = ${A} world
+
+all:
+	echo ${B}

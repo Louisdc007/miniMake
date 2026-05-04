@@ -1,0 +1,4 @@
+all: dep1 dep2
+	echo $<
+dep1:
+dep2:

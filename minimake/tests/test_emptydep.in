@@ -1,0 +1,4 @@
+NODEP = 
+
+all: ${NODEP}
+	echo ok

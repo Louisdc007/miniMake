@@ -1,0 +1,3 @@
+A1=hello
+all:
+	echo $(A1)

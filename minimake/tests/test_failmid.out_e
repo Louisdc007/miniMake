@@ -1,0 +1,4 @@
+echo before
+before
+false
+minimake: *** [all] Error 1

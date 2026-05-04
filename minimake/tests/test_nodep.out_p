@@ -1,0 +1,5 @@
+# variables
+
+# rules
+(all):
+	'echo no deps'

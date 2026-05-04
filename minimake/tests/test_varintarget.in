@@ -1,0 +1,4 @@
+TGT = all
+
+${TGT}:
+	echo works

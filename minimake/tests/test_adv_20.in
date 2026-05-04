@@ -1,0 +1,5 @@
+T=all
+D=dep
+$(T): $(D)
+dep:
+	echo dep

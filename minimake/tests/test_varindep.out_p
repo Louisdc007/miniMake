@@ -1,0 +1,8 @@
+# variables
+'DEP' = 'foo'
+
+# rules
+(all): [foo]
+	'echo all'
+(foo):
+	'echo foo'

@@ -1,0 +1,2 @@
+utd_target: utd_dep
+	echo rebuilt

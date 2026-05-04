@@ -1,0 +1,6 @@
+# variables
+'NODEP' = ''
+
+# rules
+(all):
+	'echo ok'

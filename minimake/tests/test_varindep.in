@@ -1,0 +1,7 @@
+DEP = foo
+
+all: ${DEP}
+	echo all
+
+foo:
+	echo foo

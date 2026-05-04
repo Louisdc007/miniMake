@@ -1,0 +1,3 @@
+A_B=hello
+all:
+	echo $(A_B)

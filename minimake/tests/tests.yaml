@@ -1,0 +1,719 @@
+tests:
+- name: -h seul
+  category: Flags CLI
+  args:
+  - -h
+  exit_code: 0
+  output_file: tests/test_help.out_e
+- name: -h prioritaire sur -p
+  category: Flags CLI
+  args:
+  - -h
+  - -p
+  exit_code: 0
+  output_file: tests/test_help.out_e
+- name: "-p -h \u2192 aide quand meme"
+  category: Flags CLI
+  args:
+  - -p
+  - -h
+  exit_code: 0
+  output_file: tests/test_help.out_e
+- name: -h prioritaire sur -f inexistant
+  category: Flags CLI
+  args:
+  - -f
+  - nonexistent
+  - -h
+  exit_code: 0
+  output_file: tests/test_help.out_e
+- name: "-f -h \u2192 ouvre fichier -h (pas aide)"
+  category: Flags CLI
+  args:
+  - -f
+  - -h
+  exit_code: 3
+  check_stdout: false
+- name: "-f sans argument \u2192 exit 2"
+  category: Flags CLI
+  args:
+  - -f
+  exit_code: 2
+  check_stdout: false
+- name: "-f fichier inexistant \u2192 exit 3"
+  category: Flags CLI
+  args:
+  - -f
+  - does_not_exist
+  exit_code: 3
+  check_stdout: false
+- name: "-f multiple \u2192 dernier gagne"
+  category: Flags CLI
+  args:
+  - -f
+  - tests/test_simple.in
+  - -f
+  - tests/test_secondf.in
+  exit_code: 0
+  output_file: tests/test_targets_default.out_e
+  check_stdout: false
+- name: -p basique (Minimakefile)
+  category: Mode -p
+  args:
+  - -f
+  - tests/Minimakefile.in
+  - -p
+  exit_code: 0
+  output_file: tests/Minimakefile.out_p
+- name: -p sans variables
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_simple.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_simple.out_p
+- name: -p deux variables
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_twovar.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_twovar.out_p
+- name: -p variable reference une autre
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_varref.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_varref.out_p
+- name: "-p variable definie apres \u2192 vide"
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_varafter.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_varafter.out_p
+- name: -p variable dans recette non expandue
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_varexec.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_varexec.out_p
+- name: -p rule avec multiples deps
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_multidep.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_multidep.out_p
+- name: -p rule sans deps
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_nodep.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_nodep.out_p
+- name: -p sparse rule (lignes vides entre recettes)
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_sparse.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_sparse.out_p
+- name: -p variable dans dep expandue
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_varindep.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_varindep.out_p
+- name: -p variable dans target expandue
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_varintarget.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_varintarget.out_p
+- name: "-p target vide apres expansion \u2192 ignoree"
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_emptytarget.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_emptytarget.out_p
+- name: "-p dep vide apres expansion \u2192 ignoree"
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_emptydep.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_emptydep.out_p
+- name: -p inline comment supprime
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_inlinecomment.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_inlinecomment.out_p
+- name: -p rule sans recette
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_norecipe.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_norecipe.out_p
+- name: -p trailing spaces dans variable
+  category: Mode -p
+  args:
+  - -f
+  - tests/test_trailspace.in
+  - -p
+  exit_code: 0
+  output_file: tests/test_trailspace.out_p
+- name: execution basique echo
+  category: Execution basique
+  args:
+  - -f
+  - tests/Minimakefile.in
+  exit_code: 0
+  output_file: tests/Minimakefile.out_e
+- name: execution simple echo hello
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_simple.in
+  exit_code: 0
+  output_file: tests/test_simple.out_e
+- name: plusieurs recettes dans l'ordre
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_multirecipe.in
+  exit_code: 0
+  output_file: tests/test_multirecipe.out_e
+- name: variable substituee dans recette
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_varref.in
+  exit_code: 0
+  output_file: tests/test_varref.out_e
+- name: "variable definie apres \u2192 vide au parsing"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_varafter.in
+  exit_code: 0
+  output_file: tests/test_varafter.out_e
+- name: "variable definie apres recette \u2192 expandue a l'exec"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_varexec.in
+  exit_code: 0
+  output_file: tests/test_varexec.out_e
+- name: "variable non definie \u2192 chaine vide"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_undefvar.in
+  exit_code: 0
+  output_file: tests/test_undefvar.out_e
+- name: "commentaire # dans recette \u2192 passe au shell"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_comment.in
+  exit_code: 0
+  output_file: tests/test_comment.out_e
+- name: inline comment dans variable
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_inlinecomment.in
+  exit_code: 0
+  output_file: tests/test_inlinecomment.out_e
+- name: "rule sans recette \u2192 exit 0 silencieux"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_norule_recipe.in
+  exit_code: 0
+  output_file: tests/test_norule_recipe.out_e
+- name: "sparse rule \u2192 commandes executees"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_sparse.in
+  exit_code: 0
+  output_file: tests/test_sparse.out_e
+- name: "dep vide apres expansion \u2192 ignoree"
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_emptydep.in
+  exit_code: 0
+  output_file: tests/test_emptydep.out_e
+- name: trailing spaces dans valeur variable
+  category: Execution basique
+  args:
+  - -f
+  - tests/test_trailspace.in
+  exit_code: 0
+  output_file: tests/test_trailspace.out_e
+- name: cible par defaut (premiere regle)
+  category: Selection de cible
+  args:
+  - -f
+  - tests/test_targets.in
+  exit_code: 0
+  output_file: tests/test_targets_default.out_e
+- name: cible explicite clean
+  category: Selection de cible
+  args:
+  - -f
+  - tests/test_targets.in
+  - clean
+  exit_code: 0
+  output_file: tests/test_targets_clean.out_e
+- name: cible explicite build
+  category: Selection de cible
+  args:
+  - -f
+  - tests/test_targets.in
+  - build
+  exit_code: 0
+  output_file: tests/test_targets_build.out_e
+- name: "deux cibles \u2192 executees dans l'ordre"
+  category: Selection de cible
+  args:
+  - -f
+  - tests/test_targets.in
+  - all
+  - clean
+  exit_code: 0
+  output_file: tests/test_targets_two.out_e
+- name: cible en argument avant -f
+  category: Selection de cible
+  args:
+  - clean
+  - -f
+  - tests/test_targets.in
+  exit_code: 0
+  output_file: tests/test_targets_clean.out_e
+- name: "chaine dep A\u2192B (2 niveaux)"
+  category: Dependances
+  args:
+  - -f
+  - tests/test_chain2.in
+  exit_code: 0
+  output_file: tests/test_chain2.out_e
+- name: "chaine dep A\u2192B\u2192C (3 niveaux)"
+  category: Dependances
+  args:
+  - -f
+  - tests/test_chain3.in
+  exit_code: 0
+  output_file: tests/test_chain3.out_e
+- name: variable comme nom de dep
+  category: Dependances
+  args:
+  - -f
+  - tests/test_varindep.in
+  exit_code: 0
+  output_file: tests/test_varindep.out_e
+- name: dep avec multiple deps
+  category: Dependances
+  args:
+  - -f
+  - tests/test_multidep.in
+  exit_code: 0
+  output_file: tests/test_multidep.out_e
+- name: "dep introuvable \u2192 exit 2"
+  category: Dependances
+  args:
+  - -f
+  - tests/test_missingdep.in
+  exit_code: 2
+  check_stdout: false
+- name: "false \u2192 exit 2"
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_fail.in
+  exit_code: 2
+  output_file: tests/test_fail.out_e
+- name: "echec mid-recette \u2192 arret"
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_failmid.in
+  exit_code: 2
+  output_file: tests/test_failmid.out_e
+- name: deux cibles, premiere echoue, deuxieme s'execute
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_continue.in
+  - bad
+  - good
+  exit_code: 2
+  output_file: tests/test_continue.out_e
+- name: "cible inconnue \u2192 exit 2"
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_unknowntarget.in
+  - nope
+  exit_code: 2
+  check_stdout: false
+- name: "makefile vide (aucune regle) \u2192 exit 2"
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_empty.in
+  exit_code: 2
+  check_stdout: false
+- name: "commande introuvable \u2192 Error 127"
+  category: Erreurs
+  args:
+  - -f
+  - tests/test_notacmd.in
+  exit_code: 2
+  output_file: tests/test_notacmd.out_e
+- name: cible a jour (newer que dep)
+  category: Up-to-date
+  args:
+  - -f
+  - tests/test_uptodate.in
+  exit_code: 0
+  output_file: tests/test_uptodate_fresh.out_e
+  setup:
+  - touch -t 202001010000 utd_dep
+  - touch -t 202501010000 utd_target
+  teardown:
+  - rm -f utd_dep utd_target
+- name: "cible perimee (older que dep) \u2192 rebuild"
+  category: Up-to-date
+  args:
+  - -f
+  - tests/test_uptodate.in
+  exit_code: 0
+  output_file: tests/test_uptodate_stale.out_e
+  setup:
+  - touch -t 202501010000 utd_dep
+  - touch -t 202001010000 utd_target
+  teardown:
+  - rm -f utd_dep utd_target
+- name: "cible absente \u2192 rebuild"
+  category: Up-to-date
+  args:
+  - -f
+  - tests/test_uptodate.in
+  exit_code: 0
+  output_file: tests/test_uptodate_stale.out_e
+  setup:
+  - touch utd_dep
+  - rm -f utd_target
+  teardown:
+  - rm -f utd_dep utd_target
+- name: cible a jour sans deps
+  category: Up-to-date
+  args:
+  - -f
+  - tests/test_uptodate_nodep.in
+  - myfile
+  exit_code: 0
+  setup:
+  - touch myfile
+  teardown:
+  - rm -f myfile
+  check_stdout: false
+- name: Var syntax $(VAR)
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_1.in
+  exit_code: 0
+  output_file: tests/test_adv_1.out_e
+- name: Var syntax ${VAR}
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_2.in
+  exit_code: 0
+  output_file: tests/test_adv_2.out_e
+- name: Var syntax $A
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_3.in
+  exit_code: 0
+  output_file: tests/test_adv_3.out_e
+- name: Var syntax $$
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_4.in
+  exit_code: 0
+  output_file: tests/test_adv_4.out_e
+- name: Var syntax $$$A
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_5.in
+  exit_code: 0
+  output_file: tests/test_adv_5.out_e
+- name: Var unknown
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_6.in
+  exit_code: 0
+  output_file: tests/test_adv_6.out_e
+- name: Var empty
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_7.in
+  exit_code: 0
+  output_file: tests/test_adv_7.out_e
+- name: Var spaces
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_8.in
+  exit_code: 0
+  output_file: tests/test_adv_8.out_e
+- name: Var numbers
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_9.in
+  exit_code: 0
+  output_file: tests/test_adv_9.out_e
+- name: Var special chars
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_10.in
+  exit_code: 0
+  output_file: tests/test_adv_10.out_e
+- name: Nested var 1
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_11.in
+  exit_code: 0
+  output_file: tests/test_adv_11.out_e
+- name: Nested var missing
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_16.in
+  exit_code: 0
+  output_file: tests/test_adv_16.out_e
+- name: Var in target
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_17.in
+  exit_code: 0
+  output_file: tests/test_adv_17.out_e
+- name: Var in recipe
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_19.in
+  exit_code: 0
+  output_file: tests/test_adv_19.out_e
+- name: Auto $@
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_21.in
+  exit_code: 0
+  output_file: tests/test_adv_21.out_e
+- name: Auto $<
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_22.in
+  exit_code: 0
+  output_file: tests/test_adv_22.out_e
+- name: Auto $^
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_23.in
+  exit_code: 0
+  output_file: tests/test_adv_23.out_e
+- name: Auto variables combined
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_27.in
+  exit_code: 0
+  output_file: tests/test_adv_27.out_e
+- name: Auto variables with suffix
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_28.in
+  exit_code: 0
+  output_file: tests/test_adv_28.out_e
+- name: Auto variables empty dep
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_29.in
+  exit_code: 0
+  output_file: tests/test_adv_29.out_e
+- name: Auto variables $@
+  category: exec_variables
+  args:
+  - -f
+  - tests/test_adv_30.in
+  exit_code: 0
+  output_file: tests/test_adv_30.out_e
+- name: No deps
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_31.in
+  exit_code: 0
+  output_file: tests/test_adv_31.out_e
+- name: One dep
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_32.in
+  exit_code: 0
+  output_file: tests/test_adv_32.out_e
+- name: Multiple deps
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_33.in
+  exit_code: 0
+  output_file: tests/test_adv_33.out_e
+- name: Deep deps
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_34.in
+  exit_code: 0
+  output_file: tests/test_adv_34.out_e
+- name: Repeated deps
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_35.in
+  exit_code: 0
+  output_file: tests/test_adv_35.out_e
+- name: Circular deps fallback
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_36.in
+  exit_code: 0
+  output_file: tests/test_adv_36.out_e
+- name: Missing dep
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_37.in
+  exit_code: 2
+  output_file: tests/test_adv_37.out_e
+- name: Empty line between rules
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_39.in
+  exit_code: 0
+  output_file: tests/test_adv_39.out_e
+- name: Comments everywhere
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_40.in
+  exit_code: 0
+  output_file: tests/test_adv_40.out_e
+- name: Multiple recipes
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_41.in
+  exit_code: 0
+  output_file: tests/test_adv_41.out_e
+- name: Failing recipe
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_42.in
+  exit_code: 2
+  output_file: tests/test_adv_42.out_e
+- name: Empty recipe line
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_43.in
+  exit_code: 0
+  output_file: tests/test_adv_43.out_e
+- name: Spaces before target
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_44.in
+  exit_code: 0
+  output_file: tests/test_adv_44.out_e
+- name: Spaces in deps
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_45.in
+  exit_code: 0
+  output_file: tests/test_adv_45.out_e
+- name: Target with dot
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_46.in
+  exit_code: 0
+  output_file: tests/test_adv_46.out_e
+- name: Target with underscore
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_47.in
+  exit_code: 0
+  output_file: tests/test_adv_47.out_e
+- name: Target with dash
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_48.in
+  exit_code: 0
+  output_file: tests/test_adv_48.out_e
+- name: Recipe with exit
+  category: exec_global
+  args:
+  - -f
+  - tests/test_adv_49.in
+  exit_code: 2
+  output_file: tests/test_adv_49.out_e

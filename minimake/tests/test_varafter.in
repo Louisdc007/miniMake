@@ -1,0 +1,5 @@
+OBJ = ${SRC}.o
+SRC = main
+
+all:
+	echo ${OBJ}

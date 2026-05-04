@@ -1,8 +1,0 @@
-# variables
-'GREETING' = 'hello'
-'TARGET' = 'world'
-
-# rules
-(all):
-	'echo ${GREETING} ${TARGET}'
-	'echo done with ${TARGET}'

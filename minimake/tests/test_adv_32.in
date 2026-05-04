@@ -1,0 +1,4 @@
+all: dep
+	echo all
+dep:
+	echo dep

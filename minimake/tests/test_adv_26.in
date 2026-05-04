@@ -1,0 +1,5 @@
+A=$^
+all: dep1 dep2
+	echo $(A)
+dep1:
+dep2:

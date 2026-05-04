@@ -1,0 +1,4 @@
+D=dep
+all: $(D)
+dep:
+	echo dep

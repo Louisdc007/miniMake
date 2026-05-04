@@ -1,0 +1,7 @@
+# variables
+'OBJ' = '.o'
+'SRC' = 'main'
+
+# rules
+(all):
+	'echo ${OBJ}'

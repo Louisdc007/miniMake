@@ -1,0 +1,4 @@
+echo \|<
+/bin/sh: -c: line 0: syntax error near unexpected token 'newline'
+/bin/sh: -c: line 0: 'echo \|<'
+minimake: *** [all] Error 2

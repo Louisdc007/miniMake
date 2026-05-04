@@ -1,2 +1,0 @@
-all: missingdep
-	echo should not run

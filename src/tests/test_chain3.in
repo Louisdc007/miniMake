@@ -1,8 +1,0 @@
-all: middle
-	echo all done
-
-middle: base
-	echo middle done
-
-base:
-	echo base done

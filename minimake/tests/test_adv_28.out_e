@@ -1,0 +1,2 @@
+echo all.txt dep1.c
+all.txt dep1.c

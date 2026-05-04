@@ -1,0 +1,7 @@
+# variables
+'A' = 'hello'
+'B' = 'hello world'
+
+# rules
+(all):
+	'echo ${B}'

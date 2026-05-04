@@ -1,0 +1,6 @@
+# variables
+'TGT' = 'all'
+
+# rules
+(all):
+	'echo works'

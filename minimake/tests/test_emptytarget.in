@@ -1,0 +1,7 @@
+TGT = 
+
+${TGT}:
+	echo should not appear
+
+real:
+	echo real

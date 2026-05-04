@@ -1,0 +1,7 @@
+# variables
+'CC' = 'gcc'
+'FLAGS' = '-Wall'
+
+# rules
+(all):
+	'echo done'
