@@ -151,7 +151,9 @@ static int build_target_internal(makefile_data data, char *target,
              ds.st_mtimespec.tv_nsec > ts.st_mtimespec.tv_nsec))
           needs_rebuild = 1; // Si dep récentes alors reconstruire
 #else                        // Cas standard pour Linux / POSIX
-        if (ds.st_mtime > ts.st_mtime)
+        if (ds.st_mtim.tv_sec > ts.st_mtim.tv_sec ||
+            (ds.st_mtim.tv_sec == ts.st_mtim.tv_sec &&
+             ds.st_mtim.tv_nsec > ts.st_mtim.tv_nsec))
           needs_rebuild = 1;
 #endif
       }

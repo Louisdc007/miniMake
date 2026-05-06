@@ -68,13 +68,18 @@ char *expand_vars(char *line, var *var_tab, int nb_var) {
       if (*(src + 1) == '{' || *(src + 1) == '(') {      // ${} ou $()
         char end_char = (*(src + 1) == '{') ? '}' : ')'; // caractère de fin
         end = strchr(src + 2, end_char);      // cherche le caractère de fin
-        if (end) {                            // Si on est a la fin
-          int vlen = (int)(end - (src + 2));  // longueur du nom
-          if (vlen >= 0 && vlen < 255) {      // ne pas déborder du buffer
-            strncpy(var_name, src + 2, vlen); // copie le nom
-            var_name[vlen] = '\0';            // termine la chaine
-            is_var = 1;                       // var trouvée
+        if (end) { // Si on a trouvé la fin
+          int vlen = (int)(end - (src + 2)); // Calcule la longueur du nom de la variable
+          if (vlen >= 0 && vlen < 255) { // Sécurité pour ne pas déborder du buffer var_name
+            strncpy(var_name, src + 2, vlen); // Copie le nom de la variable
+            var_name[vlen] = '\0'; // Ajoute le terminateur de chaîne
+            is_var = 1; // Variable trouvée
           }
+        } else {
+          printf("minimake: *** unterminated variable reference.  Stop.\n");
+          fflush(stdout);
+          free(result);
+          return NULL;
         }
       } else if (*(src + 1) != '\0' && *(src + 1) != ' ' &&
                  *(src + 1) != '\t') { // les var prédef ou avec 1 char
@@ -313,14 +318,19 @@ static char **expand_deps(char **raw_deps, int ndep, var *var_tab, int nb_var,
   if (!deps)
     return NULL;
   int vdc = 0;                     // compteur de dep (valid dep counter)
-  for (int d = 0; d < ndep; d++) { // parcourt les deps
-    char *exp = expand_vars(raw_deps[d], var_tab,
-                            nb_var); // remplace les var dans la dep
-    free(raw_deps[d]);               // plus besoin du nom brut
-    if (exp && exp[0] != '\0')
-      deps[vdc++] = exp; // on ajoute
-    else                 // si vide
-      free(exp);         // on ignore
+  for (int d = 0; d < ndep; d++) { // Parcourt toutes les dépendances brutes
+    char *exp = expand_vars(raw_deps[d], var_tab, nb_var); // Remplace les variables dans la dépendance
+    free(raw_deps[d]); // On n'a plus besoin du nom de dépendance brut
+    if (!exp) {
+      for (int m = 0; m < vdc; m++) free(deps[m]);
+      free(deps);
+      for (int k = d + 1; k < ndep; k++) free(raw_deps[k]);
+      return NULL;
+    }
+    if (exp[0] != '\0') // Si la dépendance expansée n'est pas vide
+      deps[vdc++] = exp; // On l'ajoute à la liste des dépendances valides
+    else // Si elle est devenue vide suite à l'expansion (ex: var non définie)
+      free(exp); // On l'ignore
   }
   deps[vdc] = NULL;
   *out_count = vdc; // nb de vraie dep

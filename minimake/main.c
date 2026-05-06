@@ -101,9 +101,9 @@ le -p
   }
 
   /*
-si y a pas de règles...
+si y a pas de règles et pas de cible CLI...
    */
-  if (data.nb_rules == 0) {
+  if (data.nb_rules == 0 && nb_targets == 0) {
     printf("minimake: *** No targets.  Stop.\n");
     fflush(stdout);
     free_makefile_data(data);
